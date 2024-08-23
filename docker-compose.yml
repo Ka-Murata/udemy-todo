@@ -1,0 +1,41 @@
+version: '3.8'
+
+services:
+  frontend:
+    container_name: frontend
+    build:
+      context: ./frontend
+    tty: true
+    volumes:
+      - ./frontend:/workspace/frontend
+    depends_on:
+      - backend
+    ports:
+      - "3000:3000"
+
+  backend:
+    container_name: backend
+    build:
+      context: ./backend
+    tty: true
+    volumes:
+    - ./backend:/workspace/backend
+    ports:
+      - "8080:8080"
+    
+  dev-postgres:
+    container_name: pgdb
+    image: postgres:15.1-alpine
+    ports:
+      - 5432:5432
+    volumes:
+      - ./pgdb:/docker-entrypoint-initdb.d/:ro
+
+    environment:
+      POSTGRES_USER: udemy
+      POSTGRES_PASSWORD: udemy
+      POSTGRES_DB: udemy
+    restart: always
+
+
+  
